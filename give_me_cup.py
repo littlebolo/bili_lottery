@@ -28,7 +28,9 @@ class CupLottery:
         print('切片结果：%s' % hash_slices)
         positions = [int(int(slice)*0.00001*len(self.candidates)) for slice in hash_slices]
         # 去重
-        positions = list(set(positions))
+        unduplicated_positions = list(set(positions))
+        unduplicated_positions.sort(key=positions.index)
+        positions = unduplicated_positions
         print('获奖者位置：%s' % positions)
 
         # 抽奖！
@@ -46,14 +48,14 @@ class CupLottery:
 
 def main():
     spell = input('请输入抽奖咒语：')
-    spell = '小菠萝不是毒奶' if not spell else spell
+    spell = '小菠萝才不是毒奶' if not spell else spell
 
     # 打开评论用户列表文件
     with open('output.json', 'r') as f:
         candidates = json.load(f)
     
     cup = CupLottery(candidates, spell)
-    winners = cup.draw(10)
+    winners = cup.draw(3)
 
     print('获奖名单：%s' % winners)
 
