@@ -37,7 +37,8 @@ class CupLottery:
         return winners
 
 def main():
-    spell = '小菠萝不是毒奶'
+    spell = input('请输入抽奖咒语：')
+    spell = '小菠萝不是毒奶' if not spell else spell
 
     # 打开评论用户列表文件
     with open('output.json', 'r') as f:
@@ -46,7 +47,7 @@ def main():
     cup = CupLottery(candidates, spell)
     winners = cup.draw()[:3]
 
-    print(winners)
+    print('获奖名单：%s' % winners)
 
 if __name__ == '__main__':
     main()
