@@ -2,6 +2,7 @@
 
 import json
 import hashlib
+import os
 
 class CupLottery:
     def __init__(self, candidates, spell):
@@ -28,9 +29,7 @@ class CupLottery:
         print('切片结果：%s' % hash_slices)
         positions = [int(int(slice)*0.00001*len(self.candidates)) for slice in hash_slices]
         # 去重
-        unduplicated_positions = list(set(positions))
-        unduplicated_positions.sort(key=positions.index)
-        positions = unduplicated_positions
+        positions = self.__deduplicate(positions)
         print('获奖者位置：%s' % positions)
 
         # 抽奖！
@@ -46,16 +45,49 @@ class CupLottery:
                     winners.append(candidate)
         return winners
 
+    def __deduplicate(self, li):
+        # 列表去重且保持原有顺序
+        duplicated = list(set(li))
+        duplicated.sort(key=li.index)
+        return duplicated
+
 def main():
     spell = input('请输入抽奖咒语：')
     spell = '小菠萝才不是毒奶' if not spell else spell
 
     # 打开评论用户列表文件
-    with open('output.json', 'r') as f:
-        candidates = json.load(f)
-    
-    cup = CupLottery(candidates, spell)
-    winners = cup.draw(3)
+    # with open('output.json', 'r') as f:
+        # candidates = json.load(f)
+
+    candidates = []
+
+    # 遍历当前目录下的json文件
+    paths = os.listdir(os.getcwd())
+    for path in paths:
+        if os.path.splitext(path)[1] == '.json':
+            with open(str(path), 'r') as f:
+                candidates.append(json.load(f))
+
+    # 列表取交集
+    def get_intersection(candidates):
+        candidate_first = candidates[0]
+        candidate_rest = candidates
+        candidate_rest.pop(0)
+        if len(candidate_rest) == 1:
+            intersection = []
+            for c1 in candidate_first:
+                for c2 in candidate_rest[0]:
+                    if int(c1['mid']) == int(c2['mid']):
+                        intersection.append(c1)
+                        break
+            return intersection
+        
+        return get_intersection(candidate_rest)
+
+    result = get_intersection(candidates)
+
+    cup = CupLottery(result, spell)
+    winners = cup.draw(7)
 
     print('获奖名单：%s' % winners)
 
