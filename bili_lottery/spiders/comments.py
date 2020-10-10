@@ -8,7 +8,7 @@ import json
 class CommentsSpider(scrapy.Spider):
     name = 'comments'
     allowed_domains = ['bilibili.com']
-    start_urls = ['https://api.bilibili.com/x/v2/reply?jsonp=jsonp&type=1&oid=498231505&pn=']
+    start_urls = ['https://api.bilibili.com/x/v2/reply?jsonp=jsonp&type=1&oid=884750030&pn=']
     current_page = 1
 
     def start_requests(self):

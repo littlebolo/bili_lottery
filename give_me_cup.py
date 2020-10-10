@@ -70,6 +70,9 @@ def main():
 
     # 列表取交集
     def get_intersection(candidates):
+        if len(candidates) == 1:
+            return candidates[0]
+
         candidate_first = candidates[0]
         candidate_rest = candidates
         candidate_rest.pop(0)
@@ -81,7 +84,6 @@ def main():
                         intersection.append(c1)
                         break
             return intersection
-        
         return get_intersection(candidate_rest)
 
     result = get_intersection(candidates)
